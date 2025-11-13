@@ -80,3 +80,24 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Test artifacts
+test_results.log
+test_output/
+
+# Temporary files
+*.zip
+temp/
+unpacked/
+*.tmp
