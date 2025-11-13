@@ -48,7 +48,10 @@ jobs:
       shell: bash
       run: |
         # Create a fixed version with explicit type casting for Free Pascal
-        sed 's/Code := @data\[0\];/Code := T(@data[0]);/' UnBasedCode.dpr > UnBasedCode_fixed.dpr
+        # Remove the {$R *.res} directive and add type casting
+        sed -e 's/Code := @data\[0\];/Code := T(@data[0]);/' \
+            -e 's/{$R \*\.res}//' \
+            UnBasedCode.dpr > UnBasedCode_fixed.dpr
 
         # Find FPC compiler
         FPC_PATH=$(find /c/tools/freepascal -name "fpc.exe" 2>/dev/null | head -n 1)
