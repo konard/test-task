@@ -1,8 +1,21 @@
 #!/bin/bash
 # Compilation and execution script for UnBasedCode.dpr
 
+# Find FPC compiler (try common installation paths)
+FPC=""
+if command -v fpc >/dev/null 2>&1; then
+    FPC="fpc"
+elif [ -f "/c/FPC/3.2.2/bin/x86_64-win64/fpc.exe" ]; then
+    FPC="/c/FPC/3.2.2/bin/x86_64-win64/fpc.exe"
+elif [ -f "/c/FPC/3.2.2/bin/i386-win32/fpc.exe" ]; then
+    FPC="/c/FPC/3.2.2/bin/i386-win32/fpc.exe"
+else
+    echo "Error: Free Pascal Compiler (fpc) not found"
+    exit 1
+fi
+
 # Compile the program
-fpc UnBasedCode.dpr 2>&1
+$FPC UnBasedCode.dpr 2>&1
 
 echo ""
 
