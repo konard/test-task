@@ -1,0 +1,42 @@
+=== UnBasedCode.dpr Execution Output ===
+
+COMPILATION INFORMATION:
+- Compiler: Free Pascal Compiler version 3.2.2+dfsg-32 [2024/01/05] for x86_64
+- Target OS: Linux for x86-64
+- Source file: UnBasedCode_Fixed.dpr
+- Compilation status: Successful (53 lines compiled, 0.1 sec)
+
+EXECUTION OUTPUT:
+Note: This program contains x86 Windows shellcode that will not execute on Linux.
+The shellcode is designed to:
+1. Access the PEB (Process Environment Block) to find kernel32.dll
+2. Locate LoadLibraryA function dynamically
+3. Load shell32.dll
+4. Find ShellExecuteA function
+5. Execute calc.exe using ShellExecuteA("open", "calc.exe", ...)
+
+Attempting to execute shellcode (will likely segfault on Linux):
+Runtime error 216 at $0000000000425110
+  $0000000000425110
+  $000000000042305C
+
+TECHNICAL ANALYSIS:
+The program contains position-independent x86 shellcode (337 bytes) designed for Windows NT systems.
+
+How it works:
+1. PEB Access: Uses fs:[0x30] to access the Process Environment Block
+2. Module Walking: Traverses the InLoadOrderModuleList to find kernel32.dll
+3. Export Parsing: Parses PE export tables to locate function addresses
+4. Dynamic Loading: Calls LoadLibraryA to load shell32.dll
+5. Function Resolution: Finds ShellExecuteA in shell32.dll
+6. Payload Execution: Calls ShellExecuteA with parameters to launch calc.exe
+
+The code is "base-independent" (базонезависимый) because:
+- It doesn't rely on hardcoded memory addresses
+- Uses PEB walking to find modules dynamically
+- Calculates function addresses at runtime using hash comparison
+- Can work regardless of where system DLLs are loaded in memory
+
+Result on Linux:
+Runtime error 216 (general protection fault) - expected behavior as the shellcode
+targets Windows-specific structures (PEB, PE format) that don't exist on Linux.

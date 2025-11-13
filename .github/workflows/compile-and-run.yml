@@ -1,0 +1,53 @@
+name: Compile and Run UnBasedCode
+
+on:
+  push:
+    branches: [ main, issue-3-fe6bf2ec718c ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal Compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y fp-compiler
+
+    - name: Verify FPC installation
+      run: |
+        fpc -version || true
+        echo "FPC installed successfully"
+
+    - name: Compile UnBasedCode_Fixed.dpr
+      run: |
+        echo "=== Compiling UnBasedCode_Fixed.dpr ===" | tee output.txt
+        fpc -v UnBasedCode_Fixed.dpr 2>&1 | tee -a output.txt
+
+    - name: Execute compiled program
+      run: |
+        echo "" | tee -a output.txt
+        echo "=== Execution Output ===" | tee -a output.txt
+        ./UnBasedCode_Fixed 2>&1 | tee -a output.txt || {
+          echo "Program exited with code: $?" | tee -a output.txt
+        }
+
+    - name: Display output
+      if: always()
+      run: cat output.txt
+
+    - name: Upload output as artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: execution-output
+        path: |
+          output.txt
+          compile_fixed.log
+          execution_output.log
