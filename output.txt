@@ -1,0 +1,6 @@
+UnBasedCode.dpr(46,11) Error: Incompatible types: got "Pointer" expected "<procedure variable type of procedure;Register>"
+UnBasedCode.dpr(49) Fatal: There were 1 errors compiling module, stopping
+Fatal: Compilation aborted
+Error: C:\tools\freepascal\bin\i386-win32\ppc386.exe returned an error exitcode
+
+Error: Executable not found
