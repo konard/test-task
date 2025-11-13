@@ -14,14 +14,19 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref_name }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install Free Pascal Compiler
       run: |
         choco install freepascal -y
+        refreshenv
 
     - name: Compile and run UnBasedCode.dpr
       shell: bash
       run: |
+        export PATH="/c/FPC/3.2.2/bin/x86_64-win64:$PATH"
         chmod +x compile_and_run.sh
         ./compile_and_run.sh > output.txt 2>&1 || true
 
